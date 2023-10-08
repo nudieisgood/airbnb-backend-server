@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import Place from "../models/placeModel.js";
+import Place from "../models/PlaceModel.js";
 import cloudinary from "cloudinary";
 import { promises as fs } from "fs";
 
