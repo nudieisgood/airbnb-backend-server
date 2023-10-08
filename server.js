@@ -58,6 +58,7 @@ cloudinary.config({
 });
 
 app.post("/api/v1/upload", upload.array("photos", 100), (req, res) => {
+  console.log(req.files);
   const data = req.files.map((file) => file.filename);
   res.status(StatusCodes.OK).json({ data });
 });
