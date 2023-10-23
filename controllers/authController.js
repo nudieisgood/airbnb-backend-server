@@ -31,7 +31,7 @@ export const login = async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     // secure: process.env.NODE_ENV === "production",
-    secure: false,
+    secure: true,
     sameSite: "none",
   });
 
@@ -47,7 +47,7 @@ export const logout = async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now()),
     // secure: process.env.NODE_ENV === "production",
-    secure: false,
+    secure: true,
     sameSite: "none",
   });
   res.status(StatusCodes.OK).json({ msg: "Successfully logout." });
