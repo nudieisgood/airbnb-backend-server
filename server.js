@@ -31,7 +31,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const url =
-  process.env.NODE_ENV === "production"
+  process.env.NODE_ENV !== "production"
     ? "http://127.0.0.1:5173"
     : "https://weshare-cabr.onrender.com";
 
