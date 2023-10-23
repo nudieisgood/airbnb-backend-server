@@ -4,8 +4,8 @@ import User from "../models/userModel.js";
 import { createJWT, comparePW, hashedPW } from "../utlits.js";
 
 export const register = async (req, res) => {
-  // const isFirstAcc = (await User.countDocuments()) === 0;
-  // req.body.role = isFirstAcc ? "admin" : "user";
+  const isFirstAcc = (await User.countDocuments()) === 0;
+  req.body.role = isFirstAcc ? "admin" : "user";
 
   req.body.password = await hashedPW(req.body.password);
   const user = await User.create(req.body);

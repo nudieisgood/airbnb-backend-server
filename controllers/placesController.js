@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import Place from "../models/PlaceModel.js";
 import cloudinary from "cloudinary";
 import { promises as fs } from "fs";
+import User from "../models/userModel.js";
 
 export const getPlaces = async (req, res) => {
   const queryObj = { owner: req.user.userId };
@@ -9,26 +10,87 @@ export const getPlaces = async (req, res) => {
   if (req.user.role === "admin") {
     delete queryObj.owner;
   }
-  const place = await Place.find(queryObj);
+  const places = await Place.find(queryObj);
 
-  res.status(StatusCodes.OK).json({ data: place });
+  res.status(StatusCodes.OK).json({ data: places });
+};
+
+export const getFavPlaces = async (req, res) => {
+  const user = await User.findById(req.user.userId).populate({
+    path: "myFavs",
+    populate: { path: "reviews", select: "rating" },
+  });
+
+  res.status(StatusCodes.OK).json({ data: user.myFavs });
 };
 
 export const getAllPlaces = async (req, res) => {
-  const places = await Place.find();
+  const { search, surroundingEnv, roomType, sort, priceMax, priceMin } =
+    req.query;
+
+  const queryObj = {};
+
+  if (surroundingEnv && surroundingEnv !== "all") {
+    queryObj.surroundingEnv = surroundingEnv;
+  }
+
+  if (roomType && roomType !== "all") {
+    queryObj.roomType = roomType;
+  }
+
+  if (search) {
+    let searchTerm = search;
+    if (search[0] === "台") {
+      searchTerm = "臺" + search.slice(1);
+    }
+
+    queryObj.$or = [
+      { city: { $regex: searchTerm, $options: "i" } },
+      { title: { $regex: searchTerm, $options: "i" } },
+    ];
+  }
+
+  const sortObj = { costlyToCheapest: "-price", cheapestToCostly: "price" };
+  const sortKey = sortObj[sort];
+
+  const places = await Place.find(queryObj, {
+    title: 1,
+    address: 1,
+    photos: 1,
+    price: 1,
+  })
+    .populate({ path: "reviews", select: "rating" })
+    .sort(sortKey);
 
   res.status(StatusCodes.OK).json({ data: places });
 };
 
 export const getPlaceById = async (req, res) => {
   const { id } = req.params;
-  const place = await Place.findById(id);
+  const place = await Place.findById(id)
+    .populate("owner")
+    .populate({
+      path: "reviews",
+      populate: { path: "author", select: ["name", "nickName", "avatar"] },
+    });
 
   if (!place) {
     throw new NotFoundError(`Can not find the job with ID:${id}`);
   }
 
   res.status(StatusCodes.OK).json({ data: place });
+};
+
+export const deletePlaceById = async (req, res) => {
+  const { id } = req.params;
+
+  const removePlace = await Place.findByIdAndDelete(id);
+
+  if (!removePlace) {
+    throw new NotFoundError(`Can not find the Place with ID:${id}`);
+  }
+
+  res.status(StatusCodes.OK).json({ msg: "place deleted" });
 };
 
 export const createPlace = async (req, res) => {
@@ -69,7 +131,7 @@ export const createPlace = async (req, res) => {
   }
 
   const newPlace = await Place.create(req.body);
-  console.log(newPlace);
+
   res.status(StatusCodes.CREATED).json({ data: newPlace });
 };
 
@@ -123,9 +185,4 @@ export const editPlace = async (req, res) => {
   }
 
   res.status(StatusCodes.OK).json({ data: updatedPlace });
-};
-
-export const deletePlace = async (req, res) => {
-  console.log("delete place");
-  res.status(StatusCodes.OK).json({ place });
 };

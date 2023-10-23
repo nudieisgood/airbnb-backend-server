@@ -4,8 +4,9 @@ import {
   getPlaceById,
   getPlaces,
   editPlace,
-  deletePlace,
+  deletePlaceById,
   getAllPlaces,
+  getFavPlaces,
 } from "../controllers/placesController.js";
 //middlewares
 import upload from "../middlewares/multerMiddleware.js";
@@ -17,12 +18,12 @@ router
   .post(upload.array("photos", 100), authenticateUser, createPlace);
 router.route("/").get(getAllPlaces);
 router.route("/get-places-by-user").get(authenticateUser, getPlaces);
-router.route("/:id").get(getPlaceById);
+router.route("/my-favs").get(authenticateUser, getFavPlaces);
 
 router
   .route("/:id")
   .get(getPlaceById)
   .patch(upload.array("photos", 100), editPlace)
-  .delete(deletePlace);
+  .delete(deletePlaceById);
 
 export default router;

@@ -62,6 +62,13 @@ app.post("/api/v1/upload", upload.array("photos", 100), (req, res) => {
   const data = req.files.map((file) => file.filename);
   res.status(StatusCodes.OK).json({ data });
 });
+app.post("/api/v1/upload-avatar", upload.single("avatar", 100), (req, res) => {
+  console.log("avatar");
+  console.log(req.file);
+  // const data = req.files.map((file) => file.filename);
+  res.status(StatusCodes.OK).json({ data: [req.file.filename] });
+});
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/user", authenticateUser, userRoute);
 app.use("/api/v1/places", placesRoute);
