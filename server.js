@@ -29,11 +29,17 @@ dotenv.config();
 if (process.env.NODE_ENV !== "production") {
   console.log("dev mode");
 }
+
+const url =
+  process.env.NODE_ENV !== "production"
+    ? "http://127.0.0.1:5173"
+    : "https://weshare-cabr.onrender.com";
+
 const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "http://127.0.0.1:5173",
+    origin: url,
   })
 );
 app.use(
