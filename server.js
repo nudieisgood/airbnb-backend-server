@@ -80,6 +80,10 @@ app.use("/api/v1/user", authenticateUser, userRoute);
 app.use("/api/v1/places", placesRoute);
 app.use("/api/v1/booking", bookingRoute);
 
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./public", "index.html"));
+});
+
 app.use((err, req, res, next) => {
   const status = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
   const msg = err.message || "Something went wrong.";
