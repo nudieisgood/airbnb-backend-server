@@ -83,7 +83,7 @@ app.use("/api/v1/places", placesRoute);
 app.use("/api/v1/booking", bookingRoute);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public", "index.html"));
+  res.sendFile(path.resolve(__dirname, "./public/uploads", "index.html"));
 });
 
 app.use((err, req, res, next) => {
