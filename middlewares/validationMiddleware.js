@@ -8,6 +8,26 @@ import {
 
 import User from "../models/userModel.js";
 
+const withValidationError = (validateValue) => {
+  return [
+    validateValue,
+    (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        const errorMessage = errors.array().map((error) => error.msg);
+        if (errorMessage[0].startsWith("no job")) {
+          throw new NotFoundError(errorMessage);
+        }
+        if (errorMessage[0].startsWith("unauthorized")) {
+          throw new UnauthorizedError(errorMessage);
+        }
+        throw new BadRequestError(errorMessage);
+      }
+      next();
+    },
+  ];
+};
+
 export const validateRegisterInput = withValidationError([
   body("name").notEmpty().withMessage("name is required."),
   body("email")
