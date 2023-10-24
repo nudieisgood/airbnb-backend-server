@@ -14,6 +14,7 @@ import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import placesRoute from "./routes/placesRoute.js";
 import bookingRoute from "./routes/bookingRoute.js";
+const abc = "abc";
 
 //middleware
 import { authenticateUser } from "./middlewares/authMiddleware.js";
