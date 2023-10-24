@@ -33,14 +33,14 @@ if (process.env.NODE_ENV !== "production") {
 
 const url =
   process.env.NODE_ENV !== "production"
-    ? "http://127.0.0.1:5173"
-    : "https://weshare-cabr.onrender.com";
+    ? "http://127.0.0.1:5200"
+    : "https://weshare-toghter.onrender.com/";
 
 const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://127.0.0.1:5173", "https://weshare-cabr.onrender.com"],
+    origin: ["http://127.0.0.1:5200", "https://weshare-toghter.onrender.com/"],
   })
 );
 app.use(
@@ -56,7 +56,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(express.static(path.resolve(__dirname, "./public/uploads")));
-app.use(express.static(path.resolve(__dirname, "./public")));
+// app.use(express.static(path.resolve(__dirname, "./public")));
 
 //cloudinary
 cloudinary.config({
