@@ -27,7 +27,7 @@ export const getFavPlaces = async (req, res) => {
 export const getAllPlaces = async (req, res) => {
   const { search, surroundingEnv, roomType, sort, priceMax, priceMin } =
     req.query;
-
+  console.log(req.query);
   const queryObj = {};
 
   if (surroundingEnv && surroundingEnv !== "all") {
@@ -53,15 +53,21 @@ export const getAllPlaces = async (req, res) => {
   const sortObj = { costlyToCheapest: "-price", cheapestToCostly: "price" };
   const sortKey = sortObj[sort];
 
+  //pagination logic
+  const page = +req.query.page || 1;
+  const limit = 8;
+  const skip = (page - 1) * 8;
+
   const places = await Place.find(queryObj, {
     title: 1,
-    address: 1,
     photos: 1,
     price: 1,
     city: 1,
   })
     .populate({ path: "reviews", select: "rating" })
-    .sort(sortKey);
+    .sort(sortKey)
+    .skip(skip)
+    .limit(limit);
 
   res.status(StatusCodes.OK).json({ data: places });
 };
