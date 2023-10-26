@@ -58,6 +58,7 @@ export const getAllPlaces = async (req, res) => {
     address: 1,
     photos: 1,
     price: 1,
+    city: 1,
   })
     .populate({ path: "reviews", select: "rating" })
     .sort(sortKey);
