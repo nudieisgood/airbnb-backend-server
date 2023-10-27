@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { StatusCodes } from "http-status-codes";
-import helmet from "helmet";
+
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 
@@ -43,18 +43,18 @@ app.use(
     origin: ["http://127.0.0.1:5200", "https://weshare-toghter.onrender.com/"],
   })
 );
-app.use(
-  helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-      "img-src": ["'self'", "https: data:"],
-      "frame-ancestors": ["'self'", "https://maps.google.com//"],
-      frameSrc: ["'self'", "https://maps.google.com//"],
-    },
-    crossOriginEmbedderPolicy: false,
-    crossOriginOpenerPolicy: true,
-  })
-);
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     useDefaults: true,
+//     directives: {
+//       "img-src": ["'self'", "https: data:"],
+//       "frame-ancestors": ["'self'", "https://maps.google.com//"],
+//       frameSrc: ["'self'", "https://maps.google.com//"],
+//     },
+//     crossOriginEmbedderPolicy: false,
+//     crossOriginOpenerPolicy: true,
+//   })
+// );
 app.use(mongoSanitize());
 app.use(express.json());
 app.use(cookieParser());
