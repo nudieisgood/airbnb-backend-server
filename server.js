@@ -27,6 +27,7 @@ import path from "path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 dotenv.config();
+
 if (process.env.NODE_ENV !== "production") {
   console.log("dev mode");
 }
@@ -70,13 +71,10 @@ cloudinary.config({
 });
 
 app.post("/api/v1/upload", upload.array("photos", 100), (req, res) => {
-  console.log(req.files);
   const data = req.files.map((file) => file.filename);
   res.status(StatusCodes.OK).json({ data });
 });
 app.post("/api/v1/upload-avatar", upload.single("avatar", 100), (req, res) => {
-  console.log("avatar");
-  console.log(req.file);
   // const data = req.files.map((file) => file.filename);
   res.status(StatusCodes.OK).json({ data: [req.file.filename] });
 });

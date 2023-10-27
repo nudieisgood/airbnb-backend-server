@@ -16,6 +16,5 @@ router.route("/remove-love/:placeId").get(removeLove);
 router
   .route("/update-user")
   .patch(upload.single("avatar"), validateUpdateUserInput, updateCurrentUser);
-// router.route("/update-user").patch(upload.single("avatar"), updateCurrentUser);
 
 export default router;
