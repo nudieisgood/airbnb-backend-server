@@ -8,6 +8,7 @@
 # lerna-debug.log*
 
 node_modules
+client
 *.local
 
 # Editor directories and files
