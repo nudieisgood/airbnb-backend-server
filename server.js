@@ -51,6 +51,8 @@ app.use(
       "frame-ancestors": ["'self'", "https://maps.google.com//"],
       frameSrc: ["'self'", "https://maps.google.com//"],
     },
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: true,
   })
 );
 app.use(mongoSanitize());
