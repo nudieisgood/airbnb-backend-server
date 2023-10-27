@@ -198,7 +198,7 @@ export const editPlace = async (req, res) => {
 
   try {
     const geoData = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${req.body.address}&key=AIzaSyACQ_KonSkfzcMatergyAnqOeTCOJNtPM0`,
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${req.body.address}&key=${process.env.GOOLE_API}`,
       { withCredentials: false }
     );
     const lat = geoData?.data?.results[0]?.geometry.location.lat;
