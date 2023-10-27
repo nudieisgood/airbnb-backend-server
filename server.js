@@ -48,6 +48,8 @@ app.use(
     useDefaults: true,
     directives: {
       "img-src": ["'self'", "https: data:"],
+      "frame-ancestors": ["'self'", "https://maps.google.com//"],
+      frameSrc: ["'self'", "https://maps.google.com//"],
     },
   })
 );
