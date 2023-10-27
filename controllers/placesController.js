@@ -3,6 +3,7 @@ import Place from "../models/PlaceModel.js";
 import cloudinary from "cloudinary";
 import { promises as fs } from "fs";
 import User from "../models/userModel.js";
+import axios from "axios";
 
 export const getPlaces = async (req, res) => {
   const queryObj = { owner: req.user.userId };
@@ -136,6 +137,18 @@ export const createPlace = async (req, res) => {
       return photo.public_id;
     });
   }
+  try {
+    const geoData = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${req.body.address}&key=AIzaSyACQ_KonSkfzcMatergyAnqOeTCOJNtPM0`,
+      { withCredentials: false }
+    );
+    const lat = geoData?.data?.results[0]?.geometry.location.lat;
+    const lng = geoData?.data?.results[0]?.geometry.location.lng;
+
+    req.body.geoLocation = { lat, lng };
+  } catch (error) {
+    throw new NotFoundError(`Can not find the location`);
+  }
 
   const newPlace = await Place.create(req.body);
 
@@ -182,6 +195,19 @@ export const editPlace = async (req, res) => {
   req.body.ogPhotos = req.body.ogPhotos.split(",");
 
   req.body.photos = [...req.body.photos, ...req.body.ogPhotos];
+
+  try {
+    const geoData = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${req.body.address}&key=AIzaSyACQ_KonSkfzcMatergyAnqOeTCOJNtPM0`,
+      { withCredentials: false }
+    );
+    const lat = geoData?.data?.results[0]?.geometry.location.lat;
+    const lng = geoData?.data?.results[0]?.geometry.location.lng;
+
+    req.body.geoLocation = { lat, lng };
+  } catch (error) {
+    throw new NotFoundError(`Can not find the location`);
+  }
 
   const updatedPlace = await Place.findByIdAndUpdate(id, req.body, {
     new: true,
